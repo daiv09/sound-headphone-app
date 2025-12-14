@@ -89,9 +89,7 @@ export default function ParallaxVideo({ src }: { src: string }) {
 
   return (
     <section ref={containerRef} className="relative h-[500vh]" id="overview">
-
-      <div className="sticky top-0 h-screen w-full overflow-hidden bg-black">
-
+      <div className="sticky top-17 h-screen w-full overflow-hidden bg-black">
         {/* Video Layer */}
         <video
           ref={videoRef}
@@ -137,7 +135,7 @@ export default function ParallaxVideo({ src }: { src: string }) {
               </FadeIn>
 
               <FadeIn delay={0.4}>
-                <p className="text-xl md:text-2xl text-zinc-300 font-light mb-12 max-w-2xl mx-auto leading-relaxed">
+                <p className="text-xl md:text-2xl text-white font-light mb-12 max-w-2xl mx-auto leading-relaxed">
                   Engineered for <span className="text-white font-medium">silence</span>.
                   Designed for <span className="text-white font-medium">immersion</span>. <br />
                   Experience audio in its purest form.
