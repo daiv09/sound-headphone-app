@@ -31,7 +31,7 @@ const Button = ({ children, primary = false, icon: Icon }: { children: React.Rea
   </button>
 );
 
-export default function ParallaxVideo({ src }: { src: string }) {
+export default function Hero({ src }: { src: string }) {
   const containerRef = useRef<HTMLDivElement | null>(null);
   const videoRef = useRef<HTMLVideoElement | null>(null);
   const [duration, setDuration] = useState(0);

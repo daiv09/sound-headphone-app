@@ -41,7 +41,7 @@ const GalleryCarousel = () => {
             <div className="sticky top-0 flex h-screen items-center overflow-hidden">
                 <motion.div
                     style={{ x }}
-                    className="relative flex items-center gap-12 px-12"
+                    className="relative flex items-center gap-16 lg:gap-24 px-8 md:px-16 lg:px-24"
                 >
                     {/* Header Block */}
                     <div className="flex flex-col justify-center min-w-[320px] md:min-w-[360px] pr-8 mr-24 z-10 relative">
