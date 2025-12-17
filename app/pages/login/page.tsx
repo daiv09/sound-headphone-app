@@ -3,7 +3,8 @@
 
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Headphones, Mail, Lock, User, ArrowRight } from 'lucide-react';
+import { Mail, Lock, User, ArrowRight } from 'lucide-react';
+import { useRouter } from 'next/navigation';
 
 const panelVariants = {
     initial: (direction: 'left' | 'right') => ({
@@ -19,11 +20,16 @@ const panelVariants = {
 
 export default function AuthPage() {
     const [mode, setMode] = useState<'login' | 'signup'>('signup');
+    const router = useRouter();
 
     const toggleMode = (next: 'login' | 'signup') => {
         setMode(next);
     };
 
+    const handleLogin = () => {
+        // TODO: run your auth logic, then:
+        router.push('/pages/dashboard');
+    };
     return (
         <div className="min-h-screen bg-gradient-to-br from-black via-zinc-950 to-black text-zinc-100 flex items-center justify-center px-4">
             <div className="relative w-full max-w-5xl rounded-3xl border border-zinc-800 bg-zinc-950/80 backdrop-blur-2xl shadow-[0_28px_120px_rgba(0,0,0,0.85)] overflow-hidden">
@@ -95,174 +101,178 @@ export default function AuthPage() {
                             </button>
                         </div>
 
-                        <AnimatePresence mode="wait" initial={false} custom={mode === 'login' ? 'right' : 'left'}>
-                            {mode === 'signup' ? (
-                                <motion.div
-                                    key="signup"
-                                    variants={panelVariants}
-                                    initial="initial"
-                                    animate="animate"
-                                    exit="exit"
-                                    custom="left"
-                                    transition={{ duration: 0.4, ease: 'easeOut' }}
-                                    className="space-y-6"
-                                >
-                                    <div>
-                                        <h2 className="text-2xl font-semibold mb-1">Create your SOUND ID</h2>
-                                        <p className="text-sm text-zinc-400">
-                                            One secure account for headphones, app, and future devices.
-                                        </p>
-                                    </div>
+                        <div className="relative min-h-[560px]">
+                            <AnimatePresence mode="wait" initial={false} custom={mode === 'login' ? 'right' : 'left'}>
+                                {mode === 'signup' ? (
+                                    <motion.div
+                                        key="signup"
+                                        variants={panelVariants}
+                                        initial="initial"
+                                        animate="animate"
+                                        exit="exit"
+                                        custom="left"
+                                        transition={{ duration: 0.4, ease: 'easeOut' }}
+                                        className="space-y-6"
+                                    >
+                                        <div>
+                                            <h2 className="text-2xl font-semibold mb-1">Create your SOUND ID</h2>
+                                            <p className="text-sm text-zinc-400">
+                                                One secure account for headphones, app, and future devices.
+                                            </p>
+                                        </div>
 
-                                    <form className="space-y-4">
-                                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                                            <div>
-                                                <label className="block text-xs font-medium uppercase tracking-[0.2em] text-zinc-400 mb-2">
-                                                    First name
-                                                </label>
-                                                <div className="flex items-center gap-2 rounded-2xl border border-zinc-800 bg-zinc-950/70 px-3 py-2">
-                                                    <User className="h-4 w-4 text-zinc-500" />
+                                        <form className="space-y-4">
+                                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                                <div>
+                                                    <label className="block text-xs font-medium uppercase tracking-[0.2em] text-zinc-400 mb-2">
+                                                        First name
+                                                    </label>
+                                                    <div className="flex items-center gap-2 rounded-2xl border border-zinc-800 bg-zinc-950/70 px-3 py-2">
+                                                        <User className="h-4 w-4 text-zinc-500" />
+                                                        <input
+                                                            type="text"
+                                                            placeholder="Alex"
+                                                            className="w-full bg-transparent text-sm text-zinc-100 outline-none"
+                                                        />
+                                                    </div>
+                                                </div>
+                                                <div>
+                                                    <label className="block text-xs font-medium uppercase tracking-[0.2em] text-zinc-400 mb-2">
+                                                        Last name
+                                                    </label>
                                                     <input
                                                         type="text"
-                                                        placeholder="Alex"
+                                                        placeholder="Chen"
+                                                        className="w-full rounded-2xl border border-zinc-800 bg-zinc-950/70 px-3 py-2 text-sm text-zinc-100 outline-none"
+                                                    />
+                                                </div>
+                                            </div>
+
+                                            <div>
+                                                <label className="block text-xs font-medium uppercase tracking-[0.2em] text-zinc-400 mb-2">
+                                                    Email
+                                                </label>
+                                                <div className="flex items-center gap-2 rounded-2xl border border-zinc-800 bg-zinc-950/70 px-3 py-2">
+                                                    <Mail className="h-4 w-4 text-zinc-500" />
+                                                    <input
+                                                        type="email"
+                                                        placeholder="you@example.com"
                                                         className="w-full bg-transparent text-sm text-zinc-100 outline-none"
                                                     />
                                                 </div>
                                             </div>
+
                                             <div>
                                                 <label className="block text-xs font-medium uppercase tracking-[0.2em] text-zinc-400 mb-2">
-                                                    Last name
+                                                    Password
                                                 </label>
-                                                <input
-                                                    type="text"
-                                                    placeholder="Chen"
-                                                    className="w-full rounded-2xl border border-zinc-800 bg-zinc-950/70 px-3 py-2 text-sm text-zinc-100 outline-none"
-                                                />
+                                                <div className="flex items-center gap-2 rounded-2xl border border-zinc-800 bg-zinc-950/70 px-3 py-2">
+                                                    <Lock className="h-4 w-4 text-zinc-500" />
+                                                    <input
+                                                        type="password"
+                                                        placeholder="Minimum 8 characters"
+                                                        className="w-full bg-transparent text-sm text-zinc-100 outline-none"
+                                                    />
+                                                </div>
+                                                <p className="mt-2 text-[0.7rem] text-zinc-500">
+                                                    Use at least 8 characters, including a number and a symbol.
+                                                </p>
                                             </div>
-                                        </div>
+
+                                            <button
+                                                type="submit"
+                                                className="mt-2 inline-flex w-full items-center justify-center rounded-full bg-blue-600 px-4 py-2.5 text-sm font-medium text-white hover:bg-blue-500 transition-colors"
+                                            >
+                                                Create account
+                                                <ArrowRight className="ml-2 h-4 w-4" />
+                                            </button>
+                                        </form>
+
+                                        <p className="text-[0.75rem] text-zinc-500">
+                                            By creating an account, you agree to the SOUND Terms of Service and Privacy Policy.
+                                        </p>
+                                    </motion.div>
+                                ) : (
+                                    <motion.div
+                                        key="login"
+                                        variants={panelVariants}
+                                        initial="initial"
+                                        animate="animate"
+                                        exit="exit"
+                                        custom="right"
+                                        transition={{ duration: 0.4, ease: 'easeOut' }}
+                                        className="space-y-6"
+                                    >
+
 
                                         <div>
-                                            <label className="block text-xs font-medium uppercase tracking-[0.2em] text-zinc-400 mb-2">
-                                                Email
-                                            </label>
-                                            <div className="flex items-center gap-2 rounded-2xl border border-zinc-800 bg-zinc-950/70 px-3 py-2">
-                                                <Mail className="h-4 w-4 text-zinc-500" />
-                                                <input
-                                                    type="email"
-                                                    placeholder="you@example.com"
-                                                    className="w-full bg-transparent text-sm text-zinc-100 outline-none"
-                                                />
-                                            </div>
-                                        </div>
-
-                                        <div>
-                                            <label className="block text-xs font-medium uppercase tracking-[0.2em] text-zinc-400 mb-2">
-                                                Password
-                                            </label>
-                                            <div className="flex items-center gap-2 rounded-2xl border border-zinc-800 bg-zinc-950/70 px-3 py-2">
-                                                <Lock className="h-4 w-4 text-zinc-500" />
-                                                <input
-                                                    type="password"
-                                                    placeholder="Minimum 8 characters"
-                                                    className="w-full bg-transparent text-sm text-zinc-100 outline-none"
-                                                />
-                                            </div>
-                                            <p className="mt-2 text-[0.7rem] text-zinc-500">
-                                                Use at least 8 characters, including a number and a symbol.
+                                            <h2 className="text-2xl font-semibold mb-1">Welcome back</h2>
+                                            <p className="text-sm text-zinc-400">
+                                                Log in to access your listening history, presets, and devices.
                                             </p>
                                         </div>
 
-                                        <button
-                                            type="submit"
-                                            className="mt-2 inline-flex w-full items-center justify-center rounded-full bg-blue-600 px-4 py-2.5 text-sm font-medium text-white hover:bg-blue-500 transition-colors"
-                                        >
-                                            Create account
-                                            <ArrowRight className="ml-2 h-4 w-4" />
-                                        </button>
-                                    </form>
-
-                                    <p className="text-[0.75rem] text-zinc-500">
-                                        By creating an account, you agree to the SOUND Terms of Service and Privacy Policy.
-                                    </p>
-                                </motion.div>
-                            ) : (
-                                <motion.div
-                                    key="login"
-                                    variants={panelVariants}
-                                    initial="initial"
-                                    animate="animate"
-                                    exit="exit"
-                                    custom="right"
-                                    transition={{ duration: 0.4, ease: 'easeOut' }}
-                                    className="space-y-6"
-                                >
-
-
-                                    <div>
-                                        <h2 className="text-2xl font-semibold mb-1">Welcome back</h2>
-                                        <p className="text-sm text-zinc-400">
-                                            Log in to access your listening history, presets, and devices.
-                                        </p>
-                                    </div>
-
-                                    <form className="space-y-4">
-                                        <div>
-                                            <label className="block text-xs font-medium uppercase tracking-[0.2em] text-zinc-400 mb-2">
-                                                Email
-                                            </label>
-                                            <div className="flex items-center gap-2 rounded-2xl border border-zinc-800 bg-zinc-950/70 px-3 py-2">
-                                                <Mail className="h-4 w-4 text-zinc-500" />
-                                                <input
-                                                    type="email"
-                                                    placeholder="you@example.com"
-                                                    className="w-full bg-transparent text-sm text-zinc-100 outline-none"
-                                                />
+                                        <form className="space-y-4">
+                                            <div>
+                                                <label className="block text-xs font-medium uppercase tracking-[0.2em] text-zinc-400 mb-2">
+                                                    Email
+                                                </label>
+                                                <div className="flex items-center gap-2 rounded-2xl border border-zinc-800 bg-zinc-950/70 px-3 py-2">
+                                                    <Mail className="h-4 w-4 text-zinc-500" />
+                                                    <input
+                                                        type="email"
+                                                        placeholder="you@example.com"
+                                                        className="w-full bg-transparent text-sm text-zinc-100 outline-none"
+                                                    />
+                                                </div>
                                             </div>
-                                        </div>
 
-                                        <div>
-                                            <label className="block text-xs font-medium uppercase tracking-[0.2em] text-zinc-400 mb-2">
-                                                Password
-                                            </label>
-                                            <div className="flex items-center gap-2 rounded-2xl border border-zinc-800 bg-zinc-950/70 px-3 py-2">
-                                                <Lock className="h-4 w-4 text-zinc-500" />
-                                                <input
-                                                    type="password"
-                                                    placeholder="••••••••"
-                                                    className="w-full bg-transparent text-sm text-zinc-100 outline-none"
-                                                />
+                                            <div>
+                                                <label className="block text-xs font-medium uppercase tracking-[0.2em] text-zinc-400 mb-2">
+                                                    Password
+                                                </label>
+                                                <div className="flex items-center gap-2 rounded-2xl border border-zinc-800 bg-zinc-950/70 px-3 py-2">
+                                                    <Lock className="h-4 w-4 text-zinc-500" />
+                                                    <input
+                                                        type="password"
+                                                        placeholder="••••••••"
+                                                        className="w-full bg-transparent text-sm text-zinc-100 outline-none"
+                                                    />
+                                                </div>
+                                                <button
+                                                    type="button"
+                                                    className="mt-2 text-xs text-blue-300 hover:text-blue-200"
+                                                    onClick={handleLogin}
+                                                >
+                                                    Forgot password?
+                                                </button>
                                             </div>
+
+                                            <button
+                                                type="submit"
+                                                className="mt-2 inline-flex w-full items-center justify-center rounded-full bg-blue-600 px-4 py-2.5 text-sm font-medium text-white hover:bg-blue-500 transition-colors"
+                                                onClick={handleLogin}
+                                            >
+                                                Log in
+                                                <ArrowRight className="ml-2 h-4 w-4" />
+                                            </button>
+                                        </form>
+
+                                        <p className="text-[0.75rem] text-zinc-500">
+                                            Don&apos;t have an account yet?{' '}
                                             <button
                                                 type="button"
-                                                className="mt-2 text-xs text-blue-300 hover:text-blue-200"
+                                                onClick={() => toggleMode('signup')}
+                                                className="text-blue-300 hover:text-blue-200 underline underline-offset-2"
                                             >
-                                                Forgot password?
+                                                Create one
                                             </button>
-                                        </div>
-
-                                        <button
-                                            type="submit"
-                                            className="mt-2 inline-flex w-full items-center justify-center rounded-full bg-blue-600 px-4 py-2.5 text-sm font-medium text-white hover:bg-blue-500 transition-colors"
-                                        >
-                                            Log in
-                                            <ArrowRight className="ml-2 h-4 w-4" />
-                                        </button>
-                                    </form>
-
-                                    <p className="text-[0.75rem] text-zinc-500">
-                                        Don&apos;t have an account yet?{' '}
-                                        <button
-                                            type="button"
-                                            onClick={() => toggleMode('signup')}
-                                            className="text-blue-300 hover:text-blue-200 underline underline-offset-2"
-                                        >
-                                            Create one
-                                        </button>
-                                        .
-                                    </p>
-                                </motion.div>
-                            )}
-                        </AnimatePresence>
+                                            .
+                                        </p>
+                                    </motion.div>
+                                )}
+                            </AnimatePresence>
+                        </div>
                     </div>
                 </div>
             </div>

@@ -1,245 +1,144 @@
 // app/dashboard/page.tsx
 'use client';
 
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
-  Headphones,
-  Volume2,
-  Mic,
-  Zap,
-  Bluetooth,
   Battery,
-  ChevronRight,
   Sliders,
-  Wind
+  ChevronRight,
+  Compass,
+  Waves,
+  Cpu,
+  Mic2,
+  Radar,
 } from 'lucide-react';
+import { EARBUD_DATA, EarbudSide } from '@/app/lib/data';
 
-// --- Types & Data ---
-type EarbudSide = 'left' | 'right';
+import Header from '@/app/components/dashboard/Header';
+import Sidebar from '@/app/components/dashboard/Sidebar';
+import Switcher from '@/app/components/dashboard/Switcher';
 
-const EARBUD_DATA = {
-  left: {
-    id: 'left',
-    title: 'Left Channel',
-    subtitle: 'Ambient & Focus Control',
-    description: 'Fine-tune Active Noise Cancellation intensities and ambient passthrough specific to your left ear.',
-    accentColor: 'text-blue-400',
-    bgGradient: 'from-blue-500/20 via-blue-900/10',
-    glow: 'bg-blue-500',
-    stats: { battery: 82, connection: 'Excellent' },
-    features: [
-      { label: 'ANC Level', icon: Wind, value: 75 },
-      { label: 'Voice Focus', icon: Mic, value: 40 },
-    ]
+// --- Animation Variants ---
+const contentContainerVariants = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: {
+      staggerChildren: 0.1,
+      delayChildren: 0.1,
+    },
   },
-  right: {
-    id: 'right',
-    title: 'Right Channel',
-    subtitle: 'Media & Voice Assistant',
-    description: 'Manage touch gestures, voice assistant latency, and call clarity settings for the right earbud.',
-    accentColor: 'text-emerald-400',
-    bgGradient: 'from-emerald-500/20 via-emerald-900/10',
-    glow: 'bg-emerald-500',
-    stats: { battery: 88, connection: 'Stable' },
-    features: [
-      { label: 'Volume Boost', icon: Volume2, value: 60 },
-      { label: 'Transparency', icon: Zap, value: 90 },
-    ]
-  }
+  exit: {
+    opacity: 0,
+    transition: { duration: 0.2 },
+  },
 };
 
-const SettingItem = ({
-  label,
-  danger = false,
-}: {
-  label: string
-  danger?: boolean
-}) => (
-  <button
-    className={`
-      w-full flex items-center justify-between
-      px-4 py-3 rounded-xl
-      text-sm
-      transition
-      ${danger
-        ? "text-red-400 hover:bg-red-500/10"
-        : "text-zinc-200 hover:bg-white/5"}
-    `}
-  >
-    {label}
-    <span className="text-zinc-500">›</span>
-  </button>
-)
-
-const BatteryRow = ({
-  label,
-  value,
-}: {
-  label: string
-  value: number
-}) => (
-  <div className="flex items-center gap-3">
-    <span className="w-12 text-xs text-zinc-400">{label}</span>
-    <div className="flex-1 h-2 rounded-full bg-white/10 overflow-hidden">
-      <motion.div
-        initial={{ width: 0 }}
-        animate={{ width: `${value}%` }}
-        transition={{ duration: 0.6, ease: "easeOut" }}
-        className="h-full bg-gradient-to-r from-emerald-400 to-emerald-300"
-      />
-    </div>
-    <span className="w-8 text-xs text-zinc-400 text-right">
-      {value}%
-    </span>
-  </div>
-)
+const textItemVariants = {
+  hidden: { opacity: 0, y: 20, filter: 'blur(10px)' },
+  visible: {
+    opacity: 1,
+    y: 0,
+    filter: 'blur(0px)',
+    transition: { type: 'spring', stiffness: 100, damping: 20 },
+  },
+  exit: { opacity: 0, y: -10, filter: 'blur(5px)' },
+};
 
 export default function DashboardPage() {
   const [activeSide, setActiveSide] = useState<EarbudSide>('left');
-  const [sidebarOpen, setSidebarOpen] = useState(false)
-
-  // Helper to toggle side
-  const toggleSide = (side: EarbudSide) => setActiveSide(side);
+  const [sidebarOpen, setSidebarOpen] = useState(false);
+  const detailsRef = useRef<HTMLDivElement | null>(null);
 
   const currentData = EARBUD_DATA[activeSide];
   const isLeft = activeSide === 'left';
 
+  const scrollToDetails = () => {
+    detailsRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  };
+
   return (
     <div className="min-h-screen bg-black text-zinc-100 overflow-hidden selection:bg-zinc-800">
-
-      {/* --- Ambient Background --- */}
+      {/* 1. Background Logic */}
       <div className="fixed inset-0 pointer-events-none">
         <motion.div
           animate={{
             background: isLeft
               ? 'radial-gradient(circle at 0% 50%, rgba(59, 130, 246, 0.15), transparent 50%)'
-              : 'radial-gradient(circle at 100% 50%, rgba(16, 185, 129, 0.15), transparent 50%)'
+              : 'radial-gradient(circle at 100% 50%, rgba(16, 185, 129, 0.15), transparent 50%)',
           }}
-          transition={{ duration: 1 }}
+          transition={{ duration: 1.2, ease: [0.16, 1, 0.3, 1] }}
           className="absolute inset-0"
         />
       </div>
 
-      {/* --- Header --- */}
-      <header className="fixed top-0 inset-x-0 z-50 border-b border-white/5 bg-zinc-950/60 backdrop-blur-2xl supports-[backdrop-filter]:bg-zinc-950/30">
-        <div className="w-full px-6 md:px-12 h-16 flex items-center justify-between">
+      {/* 2. Header */}
+      <Header
+        currentData={currentData}
+        isLeft={isLeft}
+        onOpenSidebar={() => setSidebarOpen(true)}
+      />
 
-          {/* Left: Brand Identity */}
-          <div className="flex items-center gap-3 group cursor-default">
-            <span className="text-2xl font-bold tracking-tighter"
-            >
-              SOUND<span className="text-blue-500">.</span>
-            </span>
-          </div>
-
-          {/* Right: Status "Dynamic Island" Capsule */}
-          <div className="flex items-center gap-4">
-            <div className="hidden md:flex items-center gap-4 rounded-full border border-white/5 bg-white/5 px-5 py-2 backdrop-blur-md transition-colors hover:bg-white/10">
-
-              {/* Connection Indicator */}
-              <div className="flex items-center gap-2.5">
-                <div className={`relative flex h-2 w-2`}>
-                  <span className={`animate-ping absolute inline-flex h-full w-full rounded-full opacity-75 ${isLeft ? 'bg-blue-400' : 'bg-emerald-400'}`}></span>
-                  <span className={`relative inline-flex rounded-full h-2 w-2 ${isLeft ? 'bg-blue-500' : 'bg-emerald-500'}`}></span>
-                </div>
-                <Bluetooth size={13} className="text-zinc-400" />
-                <span className="text-xs font-medium text-zinc-300 tracking-wide">
-                  {currentData.id === 'left' ? 'L' : 'R'} Connected
-                </span>
-              </div>
-
-              {/* Vertical Divider */}
-              <div className="h-3 w-px bg-white/10" />
-
-              {/* Battery Indicator */}
-              <div className="flex items-center gap-2">
-                <Battery size={13} className={currentData.stats.battery < 20 ? 'text-red-400' : 'text-zinc-400'} />
-                <span className="text-xs font-medium text-zinc-300 tabular-nums">
-                  {currentData.stats.battery}%
-                </span>
-              </div>
-            </div>
-
-            {/* User Profile Avatar */}
-            <button
-              onClick={() => setSidebarOpen(true)}
-              className="
-                        h-9 w-9 rounded-full
-                        bg-gradient-to-tr from-zinc-800 to-zinc-700
-                        ring-1 ring-white/10
-                        flex items-center justify-center
-                        text-[10px] font-bold text-zinc-300
-                        shadow-lg
-                        transition
-                        hover:scale-105 hover:ring-white/20
-                        active:scale-95
-                      "
-            >
-              AL
-            </button>
-          </div>
-        </div>
-      </header>
-
+      {/* 3. Main Stage */}
       <main className="relative z-10 w-full px-6 py-8 flex flex-col h-[calc(100vh-64px)] justify-center">
-        {/* --- Main Content Stage --- */}
         <motion.div
           layout
-          transition={{ type: "spring", bounce: 0.2, duration: 0.8 }}
-          className={`flex flex-col md:flex-row items-center justify-center gap-12 md:gap-32 lg:gap-48 w-full ${isLeft ? 'md:flex-row' : 'md:flex-row-reverse'}`}
+          transition={{ type: 'spring', bounce: 0, duration: 0.9 }}
+          className={`flex flex-col md:flex-row items-center justify-center gap-12 md:gap-32 lg:gap-48 w-full ${
+            isLeft ? 'md:flex-row' : 'md:flex-row-reverse'
+          }`}
         >
-          {/* --- 1. The Earbud Visual (The Anchor) --- */}
-          <motion.div
-            layout="position"
-            className="relative group shrink-0"
-          >
-            {/* Rotating / Pulsing Background Rings */}
+          {/* EARBUD VISUAL */}
+          <motion.div layout="position" className="relative group shrink-0">
+            {/* Background Rings */}
             <motion.div
               animate={{ rotate: 360 }}
-              transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
-              className={`absolute inset-[-20%] rounded-full border border-dashed border-white/10 ${isLeft ? 'border-l-blue-500/50' : 'border-r-emerald-500/50'}`}
+              transition={{ duration: 20, repeat: Infinity, ease: 'linear' }}
+              className={`absolute inset-[-20%] rounded-full border border-dashed border-white/10 ${
+                isLeft ? 'border-l-blue-500/50' : 'border-r-emerald-500/50'
+              }`}
             />
             <motion.div
               animate={{ scale: [1, 1.05, 1] }}
-              transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
+              transition={{ duration: 4, repeat: Infinity, ease: 'easeInOut' }}
               className={`absolute inset-0 rounded-full bg-gradient-to-br ${currentData.bgGradient} blur-2xl opacity-40`}
             />
 
-            {/* The Earbud Container */}
-            <div className="relative h-80 w-80 md:h-[450px] md:w-[450px] rounded-full bg-zinc-900 border border-white/5 shadow-2xl flex items-center justify-center overflow-hidden">
-              {/* Decorative Grid */}
-              <div className="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-20"></div>
-              <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,_transparent_0%,_#09090b_70%)]"></div>
-
-              {/* CONTINUOUS FLOATING CONTAINER */}
+            {/* Image Container */}
+            <div className="relative h-80 w-80 md:h-[450px] md:w-[450px] rounded-full border border-white/5 shadow-2xl flex items-center justify-center overflow-hidden">
+              <div className="absolute inset-0" />
               <motion.div
                 animate={{ y: [-10, 10, -10] }}
-                transition={{
-                  repeat: Infinity,
-                  duration: 6,
-                  ease: "easeInOut"
-                }}
+                transition={{ repeat: Infinity, duration: 6, ease: 'easeInOut' }}
                 className="relative z-10 w-full h-full flex items-center justify-center"
               >
-                {/* SWITCHING ANIMATION */}
                 <AnimatePresence mode="wait">
                   <motion.img
-                    key={activeSide} // This key triggers the animation on change
-                    src={isLeft ? "/left-earbud (1).png" : "/right-earbud (1).png"}
+                    key={activeSide}
+                    src={isLeft ? '/left-earbud (1).png' : '/right-earbud (1).png'}
                     alt={`${activeSide} earbud`}
-
-                    initial={{ opacity: 0, scale: 0.8, filter: "blur(10px)", rotate: isLeft ? -20 : 20, x: isLeft ? -50 : 50 }}
-                    animate={{ opacity: 1, scale: 1, filter: "blur(0px)", rotate: 0, x: 0 }}
-                    exit={{ opacity: 0, scale: 1.1, filter: "blur(10px)", transition: { duration: 0.2 } }}
-
-                    transition={{
-                      type: "spring",
-                      stiffness: 200,
-                      damping: 20,
-                      mass: 1
+                    initial={{
+                      opacity: 0,
+                      scale: 1.5,
+                      filter: 'blur(15px)',
+                      rotate: isLeft ? -30 : 30,
+                      x: isLeft ? -80 : 80,
                     }}
-
+                    animate={{
+                      opacity: 1,
+                      scale: 1,
+                      filter: 'blur(0px)',
+                      rotate: 0,
+                      x: 0,
+                    }}
+                    exit={{
+                      opacity: 0,
+                      scale: 0.6,
+                      filter: 'blur(20px)',
+                      transition: { duration: 0.25 },
+                    }}
+                    transition={{ type: 'spring', stiffness: 260, damping: 20 }}
                     className="w-full h-full object-contain drop-shadow-[0_20px_50px_rgba(0,0,0,0.5)] p-4"
                     draggable={false}
                   />
@@ -247,7 +146,7 @@ export default function DashboardPage() {
               </motion.div>
             </div>
 
-            {/* Floating Connection Label */}
+            {/* Floating Label */}
             <motion.div
               layout="position"
               className="absolute -bottom-8 left-1/2 -translate-x-1/2 whitespace-nowrap"
@@ -259,248 +158,228 @@ export default function DashboardPage() {
             </motion.div>
           </motion.div>
 
-          {/* --- 2. The Controls / Information --- */}
-          <motion.div
-            layout="position"
-            className="w-full max-w-md"
-          >
-            <AnimatePresence mode="wait" initial={false}>
+          {/* CONTROLS */}
+          <motion.div layout="position" className="w-full max-w-md">
+            <AnimatePresence mode="wait">
               <motion.div
-                key={activeSide} // Triggers animation on switch
-                initial={{ opacity: 0, x: isLeft ? 20 : -20 }}
-                animate={{ opacity: 1, x: 0 }}
-                exit={{ opacity: 0, x: isLeft ? -20 : 20 }}
-                transition={{ duration: 0.3 }}
-                className={`flex flex-col ${isLeft ? 'items-start text-left' : 'items-end text-right'}`}
+                key={activeSide}
+                variants={contentContainerVariants}
+                initial="hidden"
+                animate="visible"
+                exit="exit"
+                className={`flex flex-col ${
+                  isLeft ? 'items-start text-left' : 'items-end text-right'
+                }`}
               >
-                {/* Header Text */}
-                <h2 className="text-sm font-bold uppercase tracking-[0.2em] text-zinc-500 mb-2">
+                <motion.h2
+                  variants={textItemVariants}
+                  className="text-sm font-bold uppercase tracking-[0.2em] text-zinc-500 mb-2"
+                >
                   {currentData.id} Earbud
-                </h2>
-                <h1 className="text-4xl md:text-5xl font-bold tracking-tight mb-2 text-transparent bg-clip-text bg-gradient-to-b from-white to-zinc-500">
+                </motion.h2>
+                <motion.h1
+                  variants={textItemVariants}
+                  className="text-4xl md:text-5xl font-bold tracking-tight mb-2 text-transparent bg-clip-text bg-gradient-to-b from-white to-zinc-500"
+                >
                   {currentData.title}
-                </h1>
-                <p className={`text-zinc-400 mb-8 max-w-sm leading-relaxed ${isLeft ? 'mr-auto' : 'ml-auto'}`}>
+                </motion.h1>
+                <motion.p
+                  variants={textItemVariants}
+                  className={`text-zinc-400 mb-8 max-w-sm leading-relaxed ${
+                    isLeft ? 'mr-auto' : 'ml-auto'
+                  }`}
+                >
                   {currentData.description}
-                </p>
+                </motion.p>
 
-                {/* Interactive Sliders / Controls */}
-                <div className="w-full space-y-6 bg-zinc-900/40 p-6 rounded-2xl border border-white/5 backdrop-blur-sm">
-                  {currentData.features.map((feature, idx) => (
+                <motion.div
+                  variants={textItemVariants}
+                  className="w-full space-y-6 bg-zinc-900/40 p-6 rounded-2xl border border-white/5 backdrop-blur-sm"
+                >
+                  {currentData.features.map((feature: any, idx: number) => (
                     <div key={feature.label} className="group">
-                      <div className={`flex items-center justify-between mb-3 text-sm ${isLeft ? 'flex-row' : 'flex-row-reverse'}`}>
-                        <div className={`flex items-center gap-2 ${feature.value > 50 ? 'text-zinc-200' : 'text-zinc-400'}`}>
-                          <feature.icon size={16} />
-                          <span>{feature.label}</span>
+                      <div
+                        className={`flex items-center justify-between mb-3 text-sm ${
+                          isLeft ? 'flex-row' : 'flex-row-reverse'
+                        }`}
+                      >
+                        <div
+                          className={`flex items-center gap-2 ${
+                            feature.value > 50 ? 'text-zinc-200' : 'text-zinc-400'
+                          }`}
+                        >
+                          <feature.icon size={16} /> <span>{feature.label}</span>
                         </div>
-                        <span className="font-mono text-xs text-zinc-500">{feature.value}%</span>
+                        <span className="font-mono text-xs text-zinc-500">
+                          {feature.value}%
+                        </span>
                       </div>
-
-                      {/* Custom Range Slider */}
                       <div className="relative h-2 w-full bg-zinc-800 rounded-full overflow-hidden">
                         <motion.div
                           initial={{ width: 0 }}
                           animate={{ width: `${feature.value}%` }}
-                          transition={{ duration: 1, delay: 0.2 + (idx * 0.1) }}
-                          className={`absolute top-0 bottom-0 ${isLeft ? 'left-0 bg-blue-500' : 'right-0 bg-emerald-500'} opacity-80`}
+                          transition={{ duration: 1, delay: 0.4 + idx * 0.15 }}
+                          className={`absolute top-0 bottom-0 ${
+                            isLeft ? 'left-0 bg-blue-500' : 'right-0 bg-emerald-500'
+                          } opacity-80`}
                         />
                       </div>
                     </div>
                   ))}
 
-                  {/* Action Button */}
-                  <div className={`pt-4 flex ${isLeft ? 'justify-start' : 'justify-end'}`}>
-                    <button className="flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-zinc-300 hover:text-white transition-colors group">
+                  <div
+                    className={`pt-4 flex ${
+                      isLeft ? 'justify-start' : 'justify-end'
+                    }`}
+                  >
+                    <button
+                      type="button"
+                      onClick={scrollToDetails}
+                      className="flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-zinc-300 hover:text-white transition-colors group"
+                    >
                       <Sliders size={14} />
-                      Advanced Settings
-                      <ChevronRight size={14} className="group-hover:translate-x-1 transition-transform" />
+                      Advanced Technologies
+                      <ChevronRight
+                        size={14}
+                        className="group-hover:translate-x-1 transition-transform"
+                      />
                     </button>
                   </div>
-                </div>
+                </motion.div>
 
-                {/* Battery Stat Small */}
-                <div className={`mt-6 flex items-center gap-3 text-zinc-500 ${isLeft ? 'flex-row' : 'flex-row-reverse'}`}>
-                  <Battery size={16} />
-                  <span className="text-sm font-medium">{currentData.stats.battery}% Charge</span>
-                </div>
-
+                <motion.div
+                  variants={textItemVariants}
+                  className={`mt-6 flex items-center gap-3 text-zinc-500 ${
+                    isLeft ? 'flex-row' : 'flex-row-reverse'
+                  }`}
+                >
+                  <Battery size={16} />{' '}
+                  <span className="text-sm font-medium">
+                    {currentData.stats.battery}% Charge
+                  </span>
+                </motion.div>
               </motion.div>
             </AnimatePresence>
           </motion.div>
-
         </motion.div>
+      </main>
 
-        {/* --- Bottom Dynamic Island Switcher --- */}
-        <div className="fixed bottom-12 inset-x-0 flex justify-center z-50 pointer-events-none">
+      {/* 4. Advanced Details Section */}
+      <section
+        ref={detailsRef}
+        className="relative z-10 w-full px-6 pb-28 pt-6 md:pt-10 bg-gradient-to-t from-zinc-950/80 via-black/40 to-transparent"
+      >
+        <div className="max-w-5xl mx-auto grid gap-8 md:grid-cols-[1.4fr,1fr]">
+          {/* Orientation & Fit */}
           <motion.div
-            layout
-            className="
-      pointer-events-auto
-      flex items-center gap-1 p-1.5
-      rounded-full
-      bg-zinc-900/80
-      backdrop-blur-2xl
-      border border-white/10
-      shadow-[0_20px_60px_rgba(0,0,0,0.6)]
-      ring-1 ring-white/5
-    "
-            transition={{ type: "spring", stiffness: 160, damping: 18 }}
+            initial={{ opacity: 0, y: 20, filter: 'blur(10px)' }}
+            whileInView={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
+            viewport={{ once: true, amount: 0.3 }}
+            transition={{ type: 'spring', stiffness: 110, damping: 22 }}
+            className="rounded-3xl border border-white/5 bg-zinc-950/70 backdrop-blur-xl p-6 md:p-7 space-y-5"
           >
+            <div className="flex items-center justify-between gap-3">
+              <div className="flex items-center gap-2">
+                <Compass size={16} className="text-sky-400" />
+                <h3 className="text-xs font-semibold uppercase tracking-[0.22em] text-zinc-400">
+                  Orientation & Fit
+                </h3>
+              </div>
+              <span className="text-[11px] text-zinc-500">
+                Optimized for {isLeft ? 'left' : 'right'} ear geometry
+              </span>
+            </div>
 
-            {(['left', 'right'] as const).map((side) => (
-              <motion.button
-                key={side}
-                onClick={() => toggleSide(side)}
-                whileTap={{ scale: 0.96 }}
-                className="
-          relative w-24 h-12 rounded-full
-          flex items-center justify-center
-          text-sm font-medium
-          focus:outline-none
-        "
-              >
-                {/* Shared Liquid Surface */}
-                {activeSide === side && (
-                  <motion.div
-                    layoutId="island-surface"
-                    className="
-              absolute inset-0 rounded-full
-              bg-gradient-to-b
-              from-white/10 to-white/5
-              shadow-inner
-            "
-                    transition={{
-                      type: "spring",
-                      stiffness: 220,
-                      damping: 22,
-                    }}
-                  />
-                )}
+            <div className="grid gap-4 text-sm text-zinc-300 md:grid-cols-2">
+              <div className="space-y-1.5">
+                <p className="font-medium text-zinc-100">Dynamic orientation engine</p>
+                <p className="text-xs text-zinc-400 leading-relaxed">
+                  Auto‑detects wearing angle using a 9‑axis IMU to keep spatial audio locked
+                  to your head, even when you tilt or turn quickly.
+                </p>
+              </div>
+              <div className="space-y-1.5">
+                <p className="font-medium text-zinc-100">Ear contour mapping</p>
+                <p className="text-xs text-zinc-400 leading-relaxed">
+                  Micro‑vents and pressure sensors adapt seal and EQ in real time for comfort,
+                  clarity, and safe listening over long sessions.
+                </p>
+              </div>
+            </div>
 
-                {/* Text */}
-                <span
-                  className={`
-                              relative z-10
-                              transition-colors duration-300
-                              ${activeSide === side
-                      ? 'text-white'
-                      : 'text-zinc-500 hover:text-zinc-300'}
-                  `}
-                >
-                  {side === 'left' ? 'Left' : 'Right'}
-                </span>
+            <div className="mt-3 grid gap-3 text-xs text-zinc-400 md:grid-cols-3">
+              <DetailPill label="Head tracking" value="6‑axis" />
+              <DetailPill label="Orientation refresh" value="120 Hz" />
+              <DetailPill label="Fit calibration" value="On‑device" />
+            </div>
+          </motion.div>
 
-                {/* Subtle Active Glow */}
-                {activeSide === side && (
-                  <motion.span
-                    initial={{ opacity: 0, scale: 0.8 }}
-                    animate={{ opacity: 1, scale: 1 }}
-                    transition={{ duration: 0.4, ease: "easeOut" }}
-                    className="
-                                absolute -bottom-1
-                                h-1 w-6 rounded-full
-                                bg-gradient-to-r
-                                from-transparent via-white/60 to-transparent
-                              "
-                  />
-                )}
-              </motion.button>
-            ))}
+          {/* Advanced Tech Stack */}
+          <motion.div
+            initial={{ opacity: 0, y: 20, filter: 'blur(10px)' }}
+            whileInView={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
+            viewport={{ once: true, amount: 0.3 }}
+            transition={{ delay: 0.05, type: 'spring', stiffness: 110, damping: 22 }}
+            className="rounded-3xl border border-white/5 bg-zinc-950/80 backdrop-blur-2xl p-6 md:p-7 space-y-4"
+          >
+            <div className="flex items-center gap-2 mb-1">
+              <Cpu size={16} className="text-emerald-400" />
+              <h3 className="text-xs font-semibold uppercase tracking-[0.22em] text-zinc-400">
+                Advanced Stack
+              </h3>
+            </div>
+
+            <ul className="space-y-3 text-xs text-zinc-300">
+              <li className="flex items-start gap-2">
+                <Waves size={14} className="mt-[2px] text-sky-400" />
+                <div>
+                  <p className="font-medium text-zinc-100">Adaptive ANC 2.0</p>
+                  <p className="text-[11px] text-zinc-400 leading-relaxed">
+                    Dual‑band noise cancelling with environment‑aware gain, tuned
+                    independently for {isLeft ? 'left' : 'right'} channel leakage.
+                  </p>
+                </div>
+              </li>
+              <li className="flex items-start gap-2">
+                <Mic2 size={14} className="mt-[2px] text-emerald-400" />
+                <div>
+                  <p className="font-medium text-zinc-100">Beam‑formed voice pickup</p>
+                  <p className="text-[11px] text-zinc-400 leading-relaxed">
+                    Triple‑mic array focuses on your voice and suppresses lateral noise for
+                    crisp calls and in‑game comms.
+                  </p>
+                </div>
+              </li>
+              <li className="flex items-start gap-2">
+                <Radar size={14} className="mt-[2px] text-violet-400" />
+                <div>
+                  <p className="font-medium text-zinc-100">Low‑latency link engine</p>
+                  <p className="text-[11px] text-zinc-400 leading-relaxed">
+                    Custom codec pipeline with adaptive bitrate and sub‑30 ms target latency
+                    for competitive gaming and live monitoring.
+                  </p>
+                </div>
+              </li>
+            </ul>
           </motion.div>
         </div>
+      </section>
 
-        <AnimatePresence>
-          {sidebarOpen && (
-            <>
-              {/* Backdrop */}
-              <motion.div
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                exit={{ opacity: 0 }}
-                onClick={() => setSidebarOpen(false)}
-                className="fixed inset-0 bg-black/40 backdrop-blur-sm z-40"
-              />
+      {/* 5. Bottom Switcher */}
+      <Switcher activeSide={activeSide} onToggle={setActiveSide} />
 
-              {/* Sidebar */}
-              <motion.aside
-                initial={{ x: "100%" }}
-                animate={{ x: 0 }}
-                exit={{ x: "100%" }}
-                transition={{ type: "spring", stiffness: 220, damping: 26 }}
-                className="
-          fixed right-0 top-0 h-full w-[360px]
-          z-50
-          bg-zinc-950/85
-          backdrop-blur-2xl
-          border-l border-white/10
-          shadow-[-20px_0_60px_rgba(0,0,0,0.6)]
-          flex flex-col
-        "
-              >
-
-                {/* Header */}
-                <div className="px-6 py-5 border-b border-white/10">
-                  <div className="flex items-center gap-3">
-                    <div className="h-10 w-10 rounded-full bg-gradient-to-tr from-zinc-700 to-zinc-600 flex items-center justify-center text-xs font-bold text-white">
-                      AL
-                    </div>
-                    <div>
-                      <p className="text-sm font-medium text-white">Alex Lee</p>
-                      <p className="text-xs text-zinc-400">alex@icloud.com</p>
-                    </div>
-                  </div>
-                </div>
-
-                {/* Content */}
-                <div className="flex-1 overflow-y-auto px-6 py-6 space-y-8">
-
-                  {/* Account Section */}
-                  <section>
-                    <p className="text-xs uppercase tracking-wider text-zinc-500 mb-3">
-                      Account
-                    </p>
-
-                    <div className="space-y-2">
-                      <SettingItem label="Profile" />
-                      <SettingItem label="Security" />
-                      <SettingItem label="Subscriptions" />
-                      <SettingItem label="Sign Out" danger />
-                    </div>
-                  </section>
-
-                  {/* Headphone Case Section */}
-                  <section>
-                    <p className="text-xs uppercase tracking-wider text-zinc-500 mb-3">
-                      Headphone Case
-                    </p>
-
-                    <div className="
-              rounded-2xl
-              bg-white/5
-              ring-1 ring-white/10
-              p-4
-              space-y-3
-            ">
-                      <div className="flex items-center justify-between">
-                        <p className="text-sm text-white">AirPods Pro</p>
-                        <span className="text-xs text-emerald-400">Connected</span>
-                      </div>
-
-                      {/* Battery */}
-                      <div className="space-y-2">
-                        <BatteryRow label="Left" value={92} />
-                        <BatteryRow label="Right" value={88} />
-                        <BatteryRow label="Case" value={64} />
-                      </div>
-                    </div>
-                  </section>
-                </div>
-              </motion.aside>
-            </>
-          )}
-        </AnimatePresence>
-
-      </main>
+      {/* 6. Sidebar Modal */}
+      <Sidebar isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} />
     </div>
   );
 }
+
+// Small helper for pills in the details grid
+const DetailPill = ({ label, value }: { label: string; value: string }) => (
+  <div className="flex flex-col rounded-xl border border-white/5 bg-zinc-900/60 px-3 py-2">
+    <span className="text-[10px] uppercase tracking-[0.16em] text-zinc-500">
+      {label}
+    </span>
+    <span className="text-xs font-medium text-zinc-100 mt-1">{value}</span>
+  </div>
+);
