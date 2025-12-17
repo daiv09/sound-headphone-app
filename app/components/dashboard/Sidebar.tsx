@@ -1,6 +1,7 @@
 // components/dashboard/Sidebar.tsx
 'use client';
-
+import { useState } from 'react';
+import { useRouter } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
 import { User, Shield, CreditCard, LogOut, X, Zap, Smartphone, BookOpen, HelpCircle, ChevronRight, Ear, Activity } from 'lucide-react';
 
@@ -24,6 +25,12 @@ const itemVariants = {
 };
 
 export default function Sidebar({ isOpen, onClose }: SidebarProps) {
+  const [showSignOutConfirm, setShowSignOutConfirm] = useState(false);
+  const router=useRouter();
+
+  const handleSignOut = () => {
+    router.push("/")
+  }
   return (
     <AnimatePresence>
       {isOpen && (
@@ -67,7 +74,7 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
               variants={containerVariants}
               initial="closed"
               animate="open"
-              className="flex-1 overflow-y-auto px-8 py-8 space-y-10 scrollbar-hide"
+              className="flex-1 overflow-y-auto px-8 py-8 space-y-10 scrollbar-none"
             >
               {/* Device Card Section */}
               <section className="space-y-4">
@@ -218,11 +225,81 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
 
             {/* Footer */}
             <div className="p-8 border-t border-white/5 bg-zinc-950/40">
-              <motion.button whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }} className="w-full py-3.5 rounded-2xl bg-red-500/10 hover:bg-red-500/20 text-red-400 font-medium text-sm flex items-center justify-center gap-2 transition-colors border border-red-500/20">
+              <motion.button
+                whileHover={{ scale: 1.02 }}
+                whileTap={{ scale: 0.98 }}
+                onClick={() => setShowSignOutConfirm(true)}
+                className="w-full py-3.5 rounded-2xl bg-red-500/10 hover:bg-red-500/20 text-red-400 font-medium text-sm flex items-center justify-center gap-2 transition-colors border border-red-500/20"
+              >
                 <LogOut size={16} /> Sign Out
               </motion.button>
             </div>
           </motion.aside>
+            <AnimatePresence>
+              {showSignOutConfirm && (
+                <>
+                  {/* Dimmed overlay over entire viewport */}
+                  <motion.div
+                    className="fixed inset-0 bg-black/60 backdrop-blur-sm z-40"
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    exit={{ opacity: 0 }}
+                    onClick={() => setShowSignOutConfirm(false)}
+                  />
+
+                  {/* Centered dialog in viewport */}
+                  <motion.div
+                    className="
+          fixed inset-0 z-50 flex items-center justify-center px-6
+        "
+                    initial={{ opacity: 0, scale: 0.95, y: 10 }}
+                    animate={{ opacity: 1, scale: 1, y: 0 }}
+                    exit={{ opacity: 0, scale: 0.95, y: 10 }}
+                    transition={{ type: 'spring', stiffness: 260, damping: 22 }}
+                  >
+                    <div className="w-full max-w-sm rounded-2xl bg-zinc-950/95 border border-white/10 shadow-[0_24px_80px_rgba(0,0,0,0.85)] p-5 space-y-4">
+                      <div className="flex items-start gap-3">
+                        <div className="mt-0.5 h-8 w-8 rounded-full bg-red-500/15 flex items-center justify-center text-red-400">
+                          <LogOut size={16} />
+                        </div>
+                        <div className="space-y-1">
+                          <h4 className="text-sm font-semibold text-white">
+                            Sign out of SOUND ?
+                          </h4>
+                          <p className="text-xs text-zinc-400">
+                            You will be disconnected from this session. Device settings remain
+                            synced to your account.
+                          </p>
+                        </div>
+                      </div>
+
+                      <div className="flex items-center justify-end gap-2 pt-1">
+                        <button
+                          type="button"
+                          onClick={() => setShowSignOutConfirm(false)}
+                          className="px-3 py-1.5 rounded-xl text-xs font-medium text-zinc-300 bg-white/5 hover:bg-white/10 transition-colors"
+                        >
+                          Cancel
+                        </button>
+                        <button
+                          type="button"
+
+                          onClick={() => {
+                            // TODO: add real sign‑out logic
+                            setShowSignOutConfirm(false);
+                            handleSignOut();
+                            onClose();
+                          }}
+                          className="px-3.5 py-1.5 rounded-xl text-xs font-semibold text-white bg-red-500 hover:bg-red-600 transition-colors"
+                        >
+                          Sign Out
+                        </button>
+                      </div>
+                    </div>
+                  </motion.div>
+                </>
+              )}
+            </AnimatePresence>  
         </>
       )}
     </AnimatePresence>
