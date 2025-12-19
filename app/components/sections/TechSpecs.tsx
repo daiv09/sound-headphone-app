@@ -1,10 +1,11 @@
+// app/components/sections/TechSpecs.tsx
 'use client';
 import React from 'react';
 import {
   Speaker, Bluetooth, Battery, Radio,
   Activity, Zap, Music, Scale
 } from 'lucide-react';
-import { motion } from 'framer-motion';
+import { motion, type Variants } from 'framer-motion';
 import { FadeIn } from '../ui/FadeIn';
 
 const specs = [
@@ -18,7 +19,8 @@ const specs = [
   { icon: Scale, title: 'Weight', val: '240g' },
 ];
 
-const containerVariants = {
+// FIX: Explicitly type this as 'Variants' so TypeScript knows 'ease' is valid
+const containerVariants: Variants = {
   hidden: { opacity: 0, y: 24 },
   visible: {
     opacity: 1,
@@ -32,7 +34,7 @@ const containerVariants = {
   },
 };
 
-const cardVariants = {
+const cardVariants: Variants = {
   hidden: { opacity: 0, y: 18, scale: 0.96 },
   visible: { opacity: 1, y: 0, scale: 1 },
 };
