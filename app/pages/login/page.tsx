@@ -19,6 +19,11 @@ const panelVariants = {
 };
 
 export default function AuthPage() {
+    const handleSignup = (e: React.FormEvent) => {
+        e.preventDefault();
+        router.push('/pages/account');
+    };
+
     const [mode, setMode] = useState<'login' | 'signup'>('signup');
     const router = useRouter();
 
@@ -121,7 +126,7 @@ export default function AuthPage() {
                                             </p>
                                         </div>
 
-                                        <form className="space-y-4">
+                                        <form className="space-y-4" onSubmit={handleSignup}>
                                             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                                                 <div>
                                                     <label className="block text-xs font-medium uppercase tracking-[0.2em] text-zinc-400 mb-2">

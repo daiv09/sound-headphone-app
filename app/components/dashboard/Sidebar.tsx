@@ -3,7 +3,10 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
-import { User, Shield, CreditCard, LogOut, X, Zap, Smartphone, BookOpen, HelpCircle, ChevronRight, Ear, Activity } from 'lucide-react';
+import { LogOut, X, Zap, Smartphone, ChevronRight } from 'lucide-react';
+import { usePathname } from 'next/navigation';
+
+import DeviceProfileDropdown from './Dropdown';
 
 interface SidebarProps {
   isOpen: boolean;
@@ -25,8 +28,10 @@ const itemVariants = {
 };
 
 export default function Sidebar({ isOpen, onClose }: SidebarProps) {
+  const pathname = usePathname();
   const [showSignOutConfirm, setShowSignOutConfirm] = useState(false);
-  const router=useRouter();
+  const router = useRouter();
+  const isDashboard = pathname.startsWith('/pages/dashboard');
 
   const handleSignOut = () => {
     router.push("/")
@@ -76,150 +81,155 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
               animate="open"
               className="flex-1 overflow-y-auto px-8 py-8 space-y-10 scrollbar-none"
             >
-              {/* Device Card Section */}
+              {/* Device Card Section – only on dashboard */}
               <section className="space-y-4">
                 <SectionLabel>My Device</SectionLabel>
-                <motion.div
-                  variants={itemVariants}
-                  whileHover={{ y: -4, scale: 1.01 }}
-                  transition={{ type: "spring", stiffness: 260, damping: 22 }}
-                  className="
-                              relative
-                              p-5
-                              rounded-3xl
-                              bg-zinc-900/70
-                              backdrop-blur-2xl
-                              border border-zinc-700/60
-                              hover:border-zinc-300/50
-                              shadow-[0_18px_60px_rgba(0,0,0,0.65)]
-                              transition-colors
-                              group
-                              overflow-hidden
-                            "
-                >
-                  {/* outer vignette / halo */}
-                  <div
+                {isDashboard && (
+                  <motion.div
+                    variants={itemVariants}
+                    whileHover={{ y: -4, scale: 1.01 }}
+                    transition={{ type: 'spring', stiffness: 260, damping: 22 }}
                     className="
-      pointer-events-none
-      absolute inset-0
-      rounded-3xl
-      bg-[radial-gradient(circle_at_top,_rgba(244,244,245,0.18),transparent_55%),radial-gradient(circle_at_bottom,_rgba(34,197,94,0.25),transparent_60%)]
-      opacity-60
-    "
-                  />
+        relative
+        p-5
+        rounded-3xl
+        bg-zinc-900/70
+        backdrop-blur-2xl
+        border border-zinc-700/60
+        hover:border-zinc-300/50
+        shadow-[0_18px_60px_rgba(0,0,0,0.65)]
+        transition-colors
+        group
+        overflow-hidden
+      "
+                  >
+                    {/* outer vignette / halo */}
+                    <div
+                      className="
+          pointer-events-none
+          absolute inset-0
+          rounded-3xl
+          bg-[radial-gradient(circle_at_top,_rgba(244,244,245,0.18),transparent_55%),radial-gradient(circle_at_bottom,_rgba(34,197,94,0.25),transparent_60%)]
+          opacity-60
+        "
+                    />
 
-                  {/* subtle inner glass edge */}
-                  <div
-                    className="
-      pointer-events-none
-      absolute inset-[1px]
-      rounded-[1.4rem]
-      border border-white/5
-      bg-gradient-to-br from-white/5 via-transparent to-transparent
-      opacity-0
-      group-hover:opacity-100
-      transition-opacity duration-300
-    "
-                  />
+                    {/* subtle inner glass edge */}
+                    <div
+                      className="
+          pointer-events-none
+          absolute inset-[1px]
+          rounded-[1.4rem]
+          border border-white/5
+          bg-gradient-to-br from-white/5 via-transparent to-transparent
+          opacity-0
+          group-hover:opacity-100
+          transition-opacity duration-300
+        "
+                    />
 
-                  {/* content layer */}
-                  <div className="relative z-10">
-                    {/* Header */}
-                    <div className="flex items-start justify-between mb-6">
-                      <div className="flex items-center gap-3">
-                        <div
+                    {/* content layer */}
+                    <div className="relative z-10">
+                      {/* Header row + dropdown trigger */}
+                      <div className="flex items-start justify-between mb-4">
+                        <div className="flex items-center gap-3">
+                          <div
+                            className="
+                h-9 w-9
+                rounded-2xl
+                bg-zinc-900/80
+                flex items-center justify-center
+                ring-1 ring-white/10
+                shadow-[0_6px_18px_rgba(0,0,0,0.7)]
+              "
+                          >
+                            <Smartphone className="text-zinc-200" size={16} />
+                          </div>
+                          <div className="flex flex-col">
+                            <span className="text-sm font-medium text-zinc-50">
+                              SonicWare Pro
+                            </span>
+                            <span className="text-[11px] text-zinc-400">
+                              Adaptive noise · Ultra‑low latency
+                            </span>
+                          </div>
+                        </div>
+
+                        {/* Status pill */}
+                        <motion.span
+                          initial={{ opacity: 0, y: -4, scale: 0.96 }}
+                          animate={{ opacity: 1, y: 0, scale: 1 }}
+                          transition={{ delay: 0.08 }}
                           className="
-            h-9 w-9
-            rounded-2xl
-            bg-zinc-900/80
-            flex items-center justify-center
-            ring-1 ring-white/10
-            shadow-[0_6px_18px_rgba(0,0,0,0.7)]
-          "
+              inline-flex items-center gap-1.5
+              px-3 py-0.5
+              rounded-full
+              bg-emerald-400/10
+              text-emerald-300
+              text-[10px]
+              font-semibold
+              uppercase tracking-[0.18em]
+              border border-emerald-400/25
+              shadow-[0_0_16px_rgba(16,185,129,0.45)]
+            "
                         >
-                          <Smartphone className="text-zinc-200" size={16} />
-                        </div>
-                        <div className="flex flex-col">
-                          <span className="text-sm font-medium text-zinc-50">
-                            SonicWare Pro
-                          </span>
-                          <span className="text-[11px] text-zinc-400">
-                            Adaptive noise · Ultra‑low latency
-                          </span>
-                        </div>
+                          <span className="inline-block h-1.5 w-1.5 rounded-full bg-emerald-400 shadow-[0_0_12px_rgba(16,185,129,0.9)]" />
+                          Connected
+                        </motion.span>
                       </div>
 
-                      {/* Status pill */}
-                      <motion.span
-                        initial={{ opacity: 0, y: -4, scale: 0.96 }}
-                        animate={{ opacity: 1, y: 0, scale: 1 }}
-                        transition={{ delay: 0.08 }}
-                        className="
-          inline-flex items-center gap-1.5
-          px-3 py-0.5
-          rounded-full
-          bg-emerald-400/10
-          text-emerald-300
-          text-[10px]
-          font-semibold
-          uppercase tracking-[0.18em]
-          border border-emerald-400/25
-          shadow-[0_0_16px_rgba(16,185,129,0.45)]
-        "
+                      {/* Device profile dropdown */}
+                      <DeviceProfileDropdown />
+
+                      {/* Battery section */}
+                      <motion.div
+                        initial={{ opacity: 0, y: 10 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ delay: 0.15 }}
+                        className="mt-4 grid grid-cols-3 gap-3"
                       >
-                        <span className="inline-block h-1.5 w-1.5 rounded-full bg-emerald-400 shadow-[0_0_12px_rgba(16,185,129,0.9)]" />
-                        Connected
-                      </motion.span>
+                        <BatteryIndicator label="L" level={82} />
+                        <BatteryIndicator label="R" level={88} />
+                        <BatteryIndicator
+                          label="Case"
+                          level={92}
+                          icon={<Zap size={10} className="fill-current" />}
+                        />
+                      </motion.div>
+
+                      {/* bottom meta line */}
+                      <motion.div
+                        initial={{ opacity: 0, y: 6 }}
+                        animate={{ opacity: 0.7, y: 0 }}
+                        transition={{ delay: 0.22 }}
+                        className="mt-4 flex items-center justify-between text-[11px] text-zinc-500"
+                      >
+                        <span>Spatial audio on</span>
+                        <span className="text-zinc-400/80">Battery health · Excellent</span>
+                      </motion.div>
                     </div>
-
-                    {/* Battery section */}
-                    <motion.div
-                      initial={{ opacity: 0, y: 10 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      transition={{ delay: 0.15 }}
-                      className="grid grid-cols-3 gap-3"
-                    >
-                      <BatteryIndicator label="L" level={82} />
-                      <BatteryIndicator label="R" level={88} />
-                      <BatteryIndicator
-                        label="Case"
-                        level={92}
-                        icon={<Zap size={10} className="fill-current" />}
-                      />
-                    </motion.div>
-
-                    {/* bottom meta line */}
-                    <motion.div
-                      initial={{ opacity: 0, y: 6 }}
-                      animate={{ opacity: 0.7, y: 0 }}
-                      transition={{ delay: 0.22 }}
-                      className="mt-4 flex items-center justify-between text-[11px] text-zinc-500"
-                    >
-                      <span>Spatial audio on</span>
-                      <span className="text-zinc-400/80">Battery health · Excellent</span>
-                    </motion.div>
-                  </div>
-                </motion.div>
+                  </motion.div>
+                )}
               </section>
 
-              {/* Menu Sections */}
+              {/* Menu Sections (always visible) */}
               <section className="space-y-3">
                 <SectionLabel>Wellbeing</SectionLabel>
-                <MenuItem label="Safe Listening" value="Normal" />
-                <MenuItem label="Usage Stats" />
+                <MenuItem label="Safe Listening" value="Normal" href="/pages/account/wellbeing" />
+                <MenuItem label="Usage Stats" href="/pages/account/wellbeing" />
               </section>
 
               <section className="space-y-3">
                 <SectionLabel>Account</SectionLabel>
-                <MenuItem label="Personal Profile" />
-                <MenuItem label="Login & Security" />
-                <MenuItem label="Subscriptions" value="Pro" />
+                <MenuItem label="Personal Profile" href="/pages/account/profile" />
+                <MenuItem label="Login & Security" href="/pages/account/security" />
+                <MenuItem label="Subscriptions" value="Pro" href="/pages/account/subscription" />
               </section>
 
               <section className="space-y-3">
                 <SectionLabel>Support</SectionLabel>
-                <MenuItem label="User Manual" />
-                <MenuItem label="Help & FAQ" />
+                <MenuItem label="User Manual" href="/pages/account/support" />
+                <MenuItem label="Help & FAQ" href="/pages/account/support" />
               </section>
             </motion.div>
 
@@ -235,71 +245,81 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
               </motion.button>
             </div>
           </motion.aside>
-            <AnimatePresence>
-              {showSignOutConfirm && (
-                <>
-                  {/* Dimmed overlay over entire viewport */}
-                  <motion.div
-                    className="fixed inset-0 bg-black/60 backdrop-blur-sm z-40"
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    exit={{ opacity: 0 }}
-                    onClick={() => setShowSignOutConfirm(false)}
-                  />
+          <AnimatePresence>
+            {showSignOutConfirm && (
+              <>
+                {/* Dimmed overlay over entire viewport */}
+                <motion.div
+                  className="fixed inset-0 bg-black/70 backdrop-blur-md z-40"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                  transition={{ duration: 0.18 }}
+                  onClick={() => setShowSignOutConfirm(false)}
+                />
 
-                  {/* Centered dialog in viewport */}
-                  <motion.div
-                    className="
-          fixed inset-0 z-50 flex items-center justify-center px-6
-        "
-                    initial={{ opacity: 0, scale: 0.95, y: 10 }}
-                    animate={{ opacity: 1, scale: 1, y: 0 }}
-                    exit={{ opacity: 0, scale: 0.95, y: 10 }}
-                    transition={{ type: 'spring', stiffness: 260, damping: 22 }}
-                  >
-                    <div className="w-full max-w-sm rounded-2xl bg-zinc-950/95 border border-white/10 shadow-[0_24px_80px_rgba(0,0,0,0.85)] p-5 space-y-4">
-                      <div className="flex items-start gap-3">
-                        <div className="mt-0.5 h-8 w-8 rounded-full bg-red-500/15 flex items-center justify-center text-red-400">
-                          <LogOut size={16} />
+                {/* Centered dialog in viewport */}
+                <motion.div
+                  className="fixed inset-0 z-50 flex items-center justify-center px-6"
+                  initial={{ opacity: 0, scale: 0.95, y: 10 }}
+                  animate={{ opacity: 1, scale: 1, y: 0 }}
+                  exit={{ opacity: 0, scale: 0.95, y: 10 }}
+                  transition={{ type: 'spring', stiffness: 260, damping: 22 }}
+                >
+                  <div className="w-full max-w-md rounded-[2rem] bg-zinc-950/95 border border-white/10 shadow-[0_40px_120px_rgba(0,0,0,0.9)] p-6 md:p-7 space-y-5 relative overflow-hidden">
+                    {/* subtle gradient accent */}
+                    <div className="pointer-events-none absolute inset-0 opacity-40">
+                      <div className="absolute -top-16 -right-10 h-40 w-40 rounded-full bg-red-500/20 blur-3xl" />
+                      <div className="absolute -bottom-16 left-0 h-32 w-32 rounded-full bg-zinc-500/10 blur-3xl" />
+                    </div>
+
+                    <div className="relative z-10 space-y-4">
+                      <div className="flex items-start gap-4">
+                        <div className="mt-0.5 h-9 w-20 rounded-2xl bg-red-500/15 flex items-center justify-center text-red-400 shadow-[0_12px_30px_rgba(0,0,0,0.7)]">
+                          <LogOut size={18} />
                         </div>
                         <div className="space-y-1">
-                          <h4 className="text-sm font-semibold text-white">
-                            Sign out of SOUND ?
+                          <h4 className="text-base font-semibold text-white tracking-tight">
+                            Sign out of SOUND?
                           </h4>
-                          <p className="text-xs text-zinc-400">
-                            You will be disconnected from this session. Device settings remain
-                            synced to your account.
+                          <p className="text-xs text-zinc-400 leading-relaxed">
+                            You&apos;ll end this session on this device. Your paired devices and personal
+                            settings stay linked to your SOUND ID and can be restored when you sign in again.
                           </p>
                         </div>
                       </div>
 
-                      <div className="flex items-center justify-end gap-2 pt-1">
+                      <div className="flex items-center justify-between text-[11px] text-zinc-500">
+                        <span>Current session: SOUND dashboard</span>
+                        <span className="text-zinc-400">Safe to sign out</span>
+                      </div>
+
+                      <div className="flex items-center justify-end gap-3 pt-1">
                         <button
                           type="button"
                           onClick={() => setShowSignOutConfirm(false)}
-                          className="px-3 py-1.5 rounded-xl text-xs font-medium text-zinc-300 bg-white/5 hover:bg-white/10 transition-colors"
+                          className="px-3.5 py-2 rounded-xl text-xs font-medium text-zinc-200 bg-white/5 hover:bg-white/10 transition-colors"
                         >
-                          Cancel
+                          Stay signed in
                         </button>
                         <button
                           type="button"
-
                           onClick={() => {
-                            // TODO: add real sign‑out logic
                             setShowSignOutConfirm(false);
                             handleSignOut();
                             onClose();
                           }}
-                          className="px-3.5 py-1.5 rounded-xl text-xs font-semibold text-white bg-red-500 hover:bg-red-600 transition-colors"
+                          className="px-4 py-2 rounded-xl text-xs font-semibold text-white bg-red-500 hover:bg-red-600 shadow-[0_0_25px_rgba(248,113,113,0.35)] transition-colors"
                         >
-                          Sign Out
+                          Sign out anyway
                         </button>
                       </div>
                     </div>
-                  </motion.div>
-                </>
-              )}
-            </AnimatePresence>  
+                  </div>
+                </motion.div>
+              </>
+            )}
+          </AnimatePresence>
         </>
       )}
     </AnimatePresence>
@@ -311,17 +331,24 @@ const SectionLabel = ({ children }: { children: React.ReactNode }) => (
   <h4 className="text-xs font-bold text-zinc-500 uppercase tracking-widest px-2">{children}</h4>
 );
 
-const MenuItem = ({ label, value }: { label: string, value?: string }) => (
-  <motion.button variants={itemVariants} className="w-full group flex items-center justify-between p-3 rounded-xl transition-all hover:bg-white/5">
-    <div className="flex items-center gap-3">
-      <span className="text-sm font-medium text-zinc-300 group-hover:text-white">{label}</span>
-    </div>
-    <div className="flex items-center gap-2">
-      {value && <span className="text-xs text-zinc-500 font-medium">{value}</span>}
-      <ChevronRight size={14} className="text-zinc-600 group-hover:text-zinc-400 transition-transform" />
-    </div>
-  </motion.button>
-);
+const MenuItem = ({ label, value, href }: { label: string, value?: string, href?: string }) => {
+  const router = useRouter()
+
+  const handleClick = () => {
+    if (href) router.push(href);
+  };
+  return (
+    <motion.button variants={itemVariants} type="button" onClick={handleClick} className="w-full group flex items-center justify-between p-3 rounded-xl transition-all hover:bg-white/5">
+      <div className="flex items-center gap-3">
+        <span className="text-sm font-medium text-zinc-300 group-hover:text-white">{label}</span>
+      </div>
+      <div className="flex items-center gap-2">
+        {value && <span className="text-xs text-zinc-500 font-medium">{value}</span>}
+        <ChevronRight size={14} className="text-zinc-600 group-hover:text-zinc-400 transition-transform" />
+      </div>
+    </motion.button>
+  );
+};
 
 const BatteryIndicator = ({ label, level, icon }: { label: string, level: number, icon?: React.ReactNode }) => (
   <div className="flex flex-col items-center gap-2 p-2 rounded-xl bg-zinc-950/50 border border-white/5">
