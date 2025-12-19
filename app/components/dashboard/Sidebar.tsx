@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
 import { LogOut, X, Zap, Smartphone, ChevronRight } from 'lucide-react';
 import { usePathname } from 'next/navigation';
+import type {Variants} from "framer-motion"
 
 import DeviceProfileDropdown from './Dropdown';
 
@@ -13,9 +14,9 @@ interface SidebarProps {
   onClose: () => void;
 }
 
-const sidebarVariants = {
+const sidebarVariants: Variants = {
   closed: { x: "100%", opacity: 0 },
-  open: { x: 0, opacity: 1, transition: { type: "spring", stiffness: 300, damping: 30 } }
+  open: { x: 0, opacity: 1, transition: { type: "spring" as const, stiffness: 300, damping: 30 } }
 };
 
 const containerVariants = {
