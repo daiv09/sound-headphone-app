@@ -9,7 +9,7 @@ import { Lifestyle } from './sections/Lifestyle';
 import { TechSpecs } from './sections/TechSpecs';
 import { CTA } from './sections/CTA';
 import Hero from './Hero';
-import GalleryCarousel from './Gallery';
+import GalleryCarousel from './sections/Gallery';
 
 export default function PremiumHeadphonesPage() {
   const { scrollYProgress } = useScroll();

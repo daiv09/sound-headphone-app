@@ -1,4 +1,3 @@
-import Image from "next/image";
 import PremiumHeadphonesPage from "@/app/components/LandingPage";
 
 export default function Home() {
