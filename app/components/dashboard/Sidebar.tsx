@@ -19,11 +19,12 @@ const sidebarVariants: Variants = {
   open: { x: 0, opacity: 1, transition: { type: "spring" as const, stiffness: 300, damping: 30 } }
 };
 
-const containerVariants = {
+const containerVariants: Variants = {
+  closed: {},
   open: { transition: { staggerChildren: 0.05, delayChildren: 0.1 } }
 };
 
-const itemVariants = {
+const itemVariants:Variants = {
   closed: { x: 20, opacity: 0 },
   open: { x: 0, opacity: 1 }
 };

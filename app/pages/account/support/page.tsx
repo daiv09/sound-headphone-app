@@ -104,7 +104,7 @@ export default function Page() {
                         </div>
 
                         <div className="divide-y divide-white/5 rounded-2xl border border-white/5 bg-zinc-950/60">
-                            {faqs.map((f, i) => (
+                            {faqs.map((f) => (
                                 <details
                                     key={f.q}
                                     className="group open:bg-zinc-900/60 transition-colors"

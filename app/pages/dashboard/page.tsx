@@ -2,7 +2,7 @@
    'use client';
 
    import { useState, useRef } from 'react';
-   import { motion, AnimatePresence } from 'framer-motion';
+   import { motion, AnimatePresence, Variants } from 'framer-motion';
    import {
       Battery,
       Sliders,
@@ -20,7 +20,7 @@
    import Switcher from '@/app/components/dashboard/Switcher';
 
    // --- Animation Variants ---
-   const contentContainerVariants = {
+   const contentContainerVariants: Variants = {
       hidden: { opacity: 0 },
       visible: {
          opacity: 1,
@@ -35,7 +35,7 @@
       },
    };
 
-   const textItemVariants = {
+   const textItemVariants: Variants = {
       hidden: { opacity: 0, y: 20, filter: 'blur(10px)' },
       visible: {
          opacity: 1,
