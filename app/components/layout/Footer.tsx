@@ -1,7 +1,11 @@
-import React from "react";
+import { useRouter } from "next/navigation";
 import { ChevronRight } from "lucide-react";
 
 export const Footer = () => {
+    const router = useRouter()
+    const accessoriesNavigation=()=>{
+        router.push("/pages/accessories")
+    }
     return (
         <footer className="bg-black py-20 border-t border-zinc-900 text-sm">
             <div className="max-w-7xl mx-auto px-6 grid grid-cols-2 md:grid-cols-4 gap-12 text-zinc-500">
@@ -14,7 +18,7 @@ export const Footer = () => {
                         <li className="hover:text-blue-400 cursor-pointer transition-colors">
                             SOUND Mini
                         </li>
-                        <li className="hover:text-blue-400 cursor-pointer transition-colors">
+                        <li className="hover:text-blue-400 cursor-pointer transition-colors" onClick={accessoriesNavigation}>
                             Accessories
                         </li>
                     </ul>

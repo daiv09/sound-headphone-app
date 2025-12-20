@@ -125,7 +125,7 @@ export default function AccountDashboardPage() {
                         </div>
 
                         <motion.button
-                            whileHover={{ scale: 1.03, y: -1 }}
+                            // whileHover={{ scale: 1.03, y: -1 }}
                             whileTap={{ scale: 0.97 }}
                             onClick={handleAddDevice}
                             className="inline-flex items-center gap-2 rounded-full bg-blue-600 px-5 py-2.5 text-sm font-semibold text-white hover:bg-blue-500 transition-colors"

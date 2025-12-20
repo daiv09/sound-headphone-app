@@ -1,8 +1,9 @@
 "use client";
 
 import { motion, useScroll, useTransform, useSpring, useMotionValueEvent } from "framer-motion";
-import { useRef, useState, useEffect } from "react";
+import { useRef, useState, useEffect, use } from "react";
 import { Play, ShoppingBag } from "lucide-react";
+import { useRouter } from "next/navigation";
 
 // --- Reusable Components ---
 const FadeIn = ({ children, delay = 0, className = "" }: { children: React.ReactNode, delay?: number, className?: string }) => {
@@ -19,19 +20,20 @@ const FadeIn = ({ children, delay = 0, className = "" }: { children: React.React
   );
 };
 
-const Button = ({ children, primary = false, icon: Icon }: { children: React.ReactNode, primary?: boolean, icon?: any }) => (
+const Button = ({ children, primary = false, icon: Icon, onClick }: { children: React.ReactNode, primary?: boolean, icon?: any, onClick: () => void}) => (
   <button className={`
     group flex items-center gap-2 px-8 py-3 rounded-full text-sm font-medium tracking-wide transition-all duration-300
     ${primary
       ? 'bg-white text-black hover:bg-zinc-200 shadow-xl shadow-white/10'
       : 'bg-black/30 border border-white/20 text-white hover:bg-black/50 backdrop-blur-md'}
-  `}>
+  `} onClick={onClick}>
     {children}
     {Icon && <Icon size={16} className="group-hover:translate-x-1 transition-transform" />}
   </button>
 );
 
 export default function Hero({ src }: { src: string }) {
+  const router=useRouter();
   const containerRef = useRef<HTMLDivElement | null>(null);
   const videoRef = useRef<HTMLVideoElement | null>(null);
   const [duration, setDuration] = useState(0);
@@ -144,8 +146,8 @@ export default function Hero({ src }: { src: string }) {
 
               <FadeIn delay={0.6}>
                 <div className="flex flex-col md:flex-row gap-6 justify-center items-center">
-                  <Button primary icon={ShoppingBag}>Pre-order Now</Button>
-                  <Button icon={Play}>Watch the Film</Button>
+                  <Button primary icon={ShoppingBag} onClick={() => router.push('/pages/pre-order')}>Pre-order Now</Button>
+                  <Button icon={Play} onClick={() => router.push('/pages/film')}>Watch the Film</Button>
                 </div>
               </FadeIn>
 
