@@ -7,37 +7,33 @@ import { Footer } from '@/app/components/layout/Footer';
 export default function Page() {
   return (
     <main className="min-h-screen bg-black text-zinc-50">
-        <Navbar/>
+      <Navbar />
       <div className="max-w-5xl mx-auto px-6 pt-24 pb-24 space-y-10">
         <header className="space-y-3 text-center">
           <div className="inline-flex items-center gap-2 rounded-full border border-indigo-500/30 bg-indigo-500/10 px-3 py-1 text-[11px] font-semibold tracking-[0.18em] uppercase text-indigo-300">
             <Play size={14} />
-            Sound Pro X film
+            Sound Mini X film
           </div>
           <h1 className="text-3xl md:text-4xl font-semibold tracking-tight">
-            Watch the SOUND PRO X launch film
+            Watch the SOUND Mini X launch film
           </h1>
           <p className="text-sm text-zinc-400 max-w-xl mx-auto">
-            A short look at how SOUND PRO X bends noise, space, and silence to stay out of your way
-            and closer to your music.[web:101][web:114]
+            A short look at how SOUND Mini X bends noise, space, and silence to stay out of your way
+            and closer to your music.
           </p>
         </header>
 
         {/* Video / placeholder */}
         <section className="space-y-4">
           <div className="relative aspect-video w-full overflow-hidden rounded-3xl border border-zinc-800 bg-zinc-900/70">
-            {/* Replace this div with an actual <video> or embedded player */}
-            <div className="absolute inset-0 flex flex-col items-center justify-center gap-3">
-              <button
-                type="button"
-                className="flex h-16 w-16 items-center justify-center rounded-full bg-white text-black hover:bg-zinc-200 transition-colors shadow-xl shadow-black/40"
-              >
-                <Play size={26} className="ml-1" />
-              </button>
-              <p className="text-xs text-zinc-400">
-                Tap to play the launch film.
-              </p>
-            </div>
+            <video
+              src="/display-video.mp4"
+              className="h-full w-full object-cover"
+              controls
+              playsInline
+              preload="metadata"
+              // poster="/videos/sound-pro-x-film-poster.jpg" // optional poster
+            />
           </div>
 
           <div className="flex flex-wrap items-center justify-between gap-3 text-xs text-zinc-400">
@@ -60,7 +56,7 @@ export default function Page() {
           </p>
         </section>
       </div>
-      <Footer/>
+      <Footer />
     </main>
   );
 }

@@ -10,6 +10,8 @@
   },
   "dependencies": {
     "@studio-freight/lenis": "^1.0.42",
+    "@supabase/ssr": "^0.8.0",
+    "@supabase/supabase-js": "^2.89.0",
     "clsx": "^2.1.1",
     "framer-motion": "^12.23.25",
     "gsap": "^3.13.0",
