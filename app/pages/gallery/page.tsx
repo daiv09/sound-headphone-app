@@ -40,7 +40,7 @@ const galleryItems = [
 
 function GalleryPageHero() {
   return (
-    <section className="relative pt-32 pb-20 bg-gradient-to-b from-black via-zinc-950 to-black overflow-hidden">
+    <section className="relative pt-32 pb-20 bg-linear-to-b from-black via-zinc-950 to-black overflow-hidden">
       <div className="pointer-events-none absolute inset-0 opacity-60">
         <div className="absolute -top-40 left-[-10%] h-80 w-80 rounded-full bg-sky-500/20 blur-3xl" />
         <div className="absolute -bottom-40 right-[-5%] h-80 w-80 rounded-full bg-purple-500/20 blur-3xl" />
@@ -102,14 +102,14 @@ function GalleryScrollerSection() {
   return (
     <section
       ref={targetRef}
-      className="relative h-[320vh] bg-gradient-to-b from-black via-zinc-950 to-black"
+      className="relative h-[320vh] bg-linear-to-b from-black via-zinc-950 to-black"
     >
       {/* subtle background wash */}
       <motion.div
         style={{ opacity: bgOpacity }}
         className="pointer-events-none absolute inset-0"
       >
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,_rgba(59,130,246,0.08),_transparent_55%)]" />
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(59,130,246,0.08),transparent_55%)]" />
       </motion.div>
 
       <div className="sticky top-0 flex h-screen items-center overflow-hidden">
@@ -126,7 +126,7 @@ function GalleryScrollerSection() {
                 (i === 0 ? 'ml-10 md:ml-24 ' : '') +
                 (i % 2 === 0
                   ? 'h-[420px] w-[280px] md:h-[520px] md:w-[360px]'
-                  : 'h-[360px] w-[240px] md:h-[460px] md:w-[320px]')
+                  : 'h-[360px] w-60 md:h-[460px] md:w-[320px]')
               }
             />
           ))}
@@ -154,7 +154,7 @@ function GalleryCard({
       viewport={{ once: true, amount: 0.4 }}
       transition={{ duration: 0.5, ease: 'easeOut', delay: index * 0.06 }}
       whileHover={{ y: -10, scale: 1.03 }}
-      className={`group relative flex-shrink-0 cursor-pointer overflow-hidden rounded-[2.6rem] border border-zinc-700/60 bg-zinc-900/70 shadow-[0_24px_80px_rgba(0,0,0,0.9)] backdrop-blur-2xl ${className}`}
+      className={`group relative shrink-0 cursor-pointer overflow-hidden rounded-[2.6rem] border border-zinc-700/60 bg-zinc-900/70 shadow-[0_24px_80px_rgba(0,0,0,0.9)] backdrop-blur-2xl ${className}`}
     >
       <motion.img
         src={item.src}
@@ -165,7 +165,7 @@ function GalleryCard({
         className="absolute inset-0 h-full w-full object-cover"
       />
 
-      <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/40 to-transparent" />
+      <div className="absolute inset-0 bg-linear-to-t from-black/85 via-black/40 to-transparent" />
 
       <div className="absolute inset-x-0 bottom-0 p-6 md:p-7">
         <div className="rounded-3xl bg-black/45 backdrop-blur-xl border border-white/10 px-5 py-4">
@@ -192,7 +192,7 @@ function GalleryCard({
         transition={{ duration: 0.45, ease: 'easeOut' }}
         className="pointer-events-none absolute inset-0"
       >
-        <div className="absolute inset-0 rounded-[2.6rem] bg-gradient-to-r from-sky-400/20 via-cyan-300/16 to-emerald-300/20 blur-2xl" />
+        <div className="absolute inset-0 rounded-[2.6rem] bg-linear-to-r from-sky-400/20 via-cyan-300/16 to-emerald-300/20 blur-2xl" />
       </motion.div>
     </motion.article>
   );
@@ -224,7 +224,7 @@ function GalleryDetailsStrip() {
 export default function GalleryPage() {
   return (
     <div className="bg-black min-h-screen text-zinc-100">
-      <Navbar/>
+      <Navbar />
       <GalleryPageHero />
       <GalleryScrollerSection />
       <GalleryDetailsStrip />

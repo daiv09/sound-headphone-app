@@ -32,7 +32,7 @@ const GalleryCarousel = () => {
         <section
             ref={targetRef}
             // shorter scroll experience and smaller padding
-            className="relative h-[220vh] bg-gradient-to-b from-zinc-950 via-zinc-900 to-zinc-950 py-16"
+            className="relative h-[220vh] bg-linear-to-b from-zinc-950 via-zinc-900 to-zinc-950 py-16"
         >
             {/* subtle background glow */}
             <div className="pointer-events-none absolute inset-0 opacity-40">
@@ -55,11 +55,11 @@ const GalleryCarousel = () => {
                         <div className="relative mb-4 inline-block">
                             <h2 className="text-3xl md:text-4xl lg:text-5xl font-black text-white tracking-tight">
                                 In the <br />
-                                <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 via-sky-300 to-emerald-400">
+                                <span className="text-transparent bg-clip-text bg-linear-to-r from-blue-400 via-sky-300 to-emerald-400">
                                     Wild.
                                 </span>
                             </h2>
-                            <div className="absolute -inset-2 -z-10 rounded-3xl bg-gradient-to-r from-blue-500/10 via-cyan-500/5 to-emerald-500/10 blur-xl" />
+                            <div className="absolute -inset-2 -z-10 rounded-3xl bg-linear-to-r from-blue-500/10 via-cyan-500/5 to-emerald-500/10 blur-xl" />
                         </div>
 
                         <p className="text-sm md:text-base text-zinc-400 max-w-xs leading-relaxed">
@@ -92,7 +92,7 @@ const Card = ({ item, className }: { item: any; className: string }) => {
         <motion.div
             whileHover={{ scale: 1.04, y: -8 }}
             transition={{ duration: 0.35, ease: "easeOut" }}
-            className={`group relative flex-shrink-0 cursor-pointer overflow-hidden rounded-[2.2rem] border border-zinc-800/70 bg-zinc-900/80 shadow-[0_14px_40px_rgba(0,0,0,0.6)] backdrop-blur-md ${className}`}
+            className={`group relative shrink-0 cursor-pointer overflow-hidden rounded-[2.2rem] border border-zinc-800/70 bg-zinc-900/80 shadow-[0_14px_40px_rgba(0,0,0,0.6)] backdrop-blur-md ${className}`}
         >
             {/* image */}
             <motion.img
@@ -105,10 +105,10 @@ const Card = ({ item, className }: { item: any; className: string }) => {
             />
 
             {/* overlay */}
-            <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/55 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-400 pointer-events-none" />
+            <div className="absolute inset-0 bg-linear-to-t from-black/90 via-black/55 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-400 pointer-events-none" />
 
             {/* bottom content */}
-            <div className="absolute inset-x-0 bottom-0 p-4 md:p-5 bg-gradient-to-t from-black/70 via-black/40 to-transparent">
+            <div className="absolute inset-x-0 bottom-0 p-4 md:p-5 bg-linear-to-t from-black/70 via-black/40 to-transparent">
                 <p className="text-[0.68rem] md:text-[0.7rem] font-semibold uppercase tracking-[0.22em] text-zinc-300/80 mb-1.5">
                     {item.location}
                 </p>
@@ -128,7 +128,7 @@ const Card = ({ item, className }: { item: any; className: string }) => {
 
             {/* glow on hover */}
             <div className="pointer-events-none absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-400">
-                <div className="absolute inset-0 rounded-[2.2rem] bg-gradient-to-r from-blue-500/15 via-sky-400/10 to-emerald-400/15 blur-2xl" />
+                <div className="absolute inset-0 rounded-[2.2rem] bg-linear-to-r from-blue-500/15 via-sky-400/10 to-emerald-400/15 blur-2xl" />
             </div>
         </motion.div>
     );
