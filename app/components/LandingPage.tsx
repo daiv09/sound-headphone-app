@@ -8,7 +8,7 @@ import { Features } from './sections/Features';
 import { Lifestyle } from './sections/Lifestyle';
 import { TechSpecs } from './sections/TechSpecs';
 import { CTA } from './sections/CTA';
-import Hero from './Hero';
+import { ScrollExplodeCanvas } from './ScrollExplodeCanvas';
 import GalleryCarousel from './sections/Gallery';
 
 export default function PremiumHeadphonesPage() {
@@ -20,7 +20,7 @@ export default function PremiumHeadphonesPage() {
   });
 
   return (
-    <div className="bg-black min-h-screen text-zinc-100 font-sans selection:bg-blue-500/30">
+    <div className="bg-[#050505] min-h-screen text-zinc-100 font-sans selection:bg-blue-500/30">
       {/* Scroll Progress Bar */}
       <motion.div
         className="fixed top-0 left-0 right-0 h-1 bg-blue-500 origin-left z-50"
@@ -29,7 +29,7 @@ export default function PremiumHeadphonesPage() {
       <Navbar />
       <SmoothScroll>
         <main>
-          <Hero src="/video-bg.mp4" />
+          <ScrollExplodeCanvas />
           <Features />
           <Lifestyle />
 
